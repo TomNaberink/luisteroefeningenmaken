@@ -43,7 +43,7 @@ Detecteer de taal van deze tekst en geef alleen de taalcode terug (nl, en, de, f
 "${text.substring(0, 200)}..."
 `
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
     
     const languageResult = await model.generateContent(languageDetectionPrompt)
     const detectedLanguage = languageResult.response.text().trim().toLowerCase()
