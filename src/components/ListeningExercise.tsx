@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export default function ListeningExercise() {
   const [text, setText] = useState('')
@@ -18,6 +19,7 @@ export default function ListeningExercise() {
   
   const fileInputRef = useRef<HTMLInputElement>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
+  const router = useRouter()
 
   // Update current time
   useEffect(() => {
@@ -107,6 +109,18 @@ export default function ListeningExercise() {
     } finally {
       setIsGeneratingAudio(false)
     }
+  }
+
+  const startQuiz = () => {
+    if (!text.trim() || !audioUrl) return
+    
+    // Navigate to quiz page with text and audio URL as query parameters
+    const params = new URLSearchParams({
+      text: text.trim(),
+      audio: audioUrl
+    })
+    
+    router.push(`/quiz?${params.toString()}`)
   }
 
   const togglePlayPause = () => {
@@ -303,7 +317,7 @@ export default function ListeningExercise() {
               </h2>
 
               {/* Audio Player */}
-              <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6">
+              <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6 mb-6">
                 <audio ref={audioRef} src={audioUrl} preload="metadata" />
                 
                 {/* Progress Bar */}
@@ -386,6 +400,19 @@ export default function ListeningExercise() {
                 </div>
               </div>
 
+              {/* Quiz Button */}
+              <div className="text-center">
+                <button
+                  onClick={startQuiz}
+                  className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 shadow-lg font-bold text-lg"
+                >
+                  🧠 Start Quiz (10 vragen)
+                </button>
+                <p className="text-gray-600 text-sm mt-2">
+                  Test je begrip van de tekst met een interactieve quiz!
+                </p>
+              </div>
+
               {/* Instructions */}
               <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h4 className="font-semibold text-blue-800 mb-2">💡 Tips voor je luisteroefening:</h4>
@@ -393,7 +420,7 @@ export default function ListeningExercise() {
                   <li>• Luister eerst de hele tekst zonder mee te lezen</li>
                   <li>• Gebruik de terugspoelknop om moeilijke delen opnieuw te beluisteren</li>
                   <li>• Probeer de hoofdpunten te onthouden</li>
-                  <li>• Lees daarna de tekst en vergelijk met wat je gehoord hebt</li>
+                  <li>• Start daarna de quiz om je begrip te testen!</li>
                 </ul>
               </div>
             </div>
